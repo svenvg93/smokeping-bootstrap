@@ -2,6 +2,8 @@
 
 A modern looking smokeping webgui.
 
+!!! This UI does not work on small screen devices
+
 ## Screenshots
 
 <img width="1475" alt="image" src="https://github.com/svenvg93/smokeping-bootstrap/assets/4511676/297b8060-2703-4855-b1d4-d5d441c90a9f">
