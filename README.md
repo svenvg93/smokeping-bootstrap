@@ -37,7 +37,7 @@ volumes:
 ```
 
 ## Background change
-Set the graph border to no in the Presentation file to have no borders and white background on the graphs
+Set the graph border to no in at the top of  Presentation file to have no borders and white background on the graphs
 
  ```bash
 graphborders = no
