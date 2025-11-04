@@ -37,10 +37,17 @@ volumes:
 ```
 
 ## Background change
-Set the graph border to no in at the top of  Presentation file to have no borders and white background on the graphs
+Set the graphborder to no in at the top of  Presentation file to have no borders and white background on the graphs
 
  ```bash
 graphborders = no
+```
+
+## Packet Loss Colors
+To see the Packet Loss as bars in the charts set loss_background to yes in the detail section of the Presentation file 
+
+ ```bash
+loss_background = yes
 ```
 
 
