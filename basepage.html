@@ -501,19 +501,94 @@
       font-size: 0.9rem;
     }
 
+    /* Mobile menu toggle button */
+    .mobile-menu-toggle {
+      background: rgba(59, 130, 246, 0.15);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .mobile-menu-toggle:hover {
+      background: rgba(59, 130, 246, 0.25);
+    }
+
+    /* Desktop sidebar toggle */
+    .sidebar.collapsed {
+      transform: translateX(-100%);
+    }
+
+    /* Adjust main content when sidebar is collapsed on desktop */
+    @media (min-width: 769px) {
+      main[role="main"] {
+        transition: margin-left 0.3s ease, margin-right 0.3s ease, max-width 0.3s ease;
+      }
+    }
+
     /* Mobile responsiveness */
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
+        z-index: 1050;
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
       }
 
       [role="main"] {
-        padding-top: 70px;
+        padding-top: 85px;
       }
 
       .navbar-brand {
         font-size: 1.2rem;
+      }
+
+      .smokebody-header {
+        margin-top: 0.5rem;
+      }
+
+      .navbar-remark {
+        display: none;
+      }
+
+      #searchForm {
+        max-width: 200px;
+      }
+
+      #searchForm .form-control {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .navbar-brand {
+        font-size: 1rem;
+        white-space: nowrap;
+      }
+
+      .navbar-nav {
+        display: none !important;
+      }
+
+      /* Mobile overlay */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
       }
     }
 
@@ -523,12 +598,17 @@
   <body>
     <nav class="navbar navbar-dark fixed-top flex-md-nowrap shadow">
       <div class="container-fluid">
-        <a class="navbar-brand" href="?">
-          <i class="bi bi-graph-up-arrow"></i> SmokePing
-        </a>
-        <form id="searchForm" method="get" action="smokeping.cgi" enctype="multipart/form-data" name="hswitch" class="d-flex mx-auto">
-          <input class="form-control" type="text" placeholder="Search targets..." name="filter" onchange="hswitch.submit()" />
-        </form>
+        <div class="d-flex align-items-center flex-grow-1">
+          <button class="mobile-menu-toggle me-3" id="mobileMenuToggle" aria-label="Toggle menu">
+            <i class="bi bi-list"></i>
+          </button>
+          <a class="navbar-brand mb-0" href="?">
+            <i class="bi bi-graph-up-arrow"></i> SmokePing
+          </a>
+          <form id="searchForm" method="get" action="smokeping.cgi" enctype="multipart/form-data" name="hswitch" class="d-flex flex-grow-1 ms-auto">
+            <input class="form-control" type="text" placeholder="Search targets..." name="filter" onchange="hswitch.submit()" />
+          </form>
+        </div>
         <ul class="navbar-nav flex-row">
           <li class="nav-item text-nowrap">
             <a class="nav-link px-3" href="#">
@@ -539,9 +619,12 @@
       </div>
     </nav>
 
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="container-fluid">
       <div class="row">
-        <nav class="col-md-2 d-none d-md-block sidebar">
+        <nav class="col-md-2 sidebar" id="sidebar">
           <div class="sidebar-sticky">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-3">
               <span><i class="bi bi-bullseye"></i> Targets</span>
@@ -628,6 +711,63 @@
             // Target pages: Keep smokebody visible, hide welcome remark block
             remarkBlock.style.display = 'none';
           }
+        }
+
+        // Sidebar toggle (mobile and desktop)
+        var menuToggle = document.getElementById('mobileMenuToggle');
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+
+        function closeSidebar() {
+          if (sidebar && overlay) {
+            sidebar.classList.remove('show');
+            sidebar.classList.remove('collapsed');
+            overlay.classList.remove('show');
+          }
+        }
+
+        function toggleSidebar() {
+          var isMobile = window.innerWidth <= 768;
+          var mainContent = document.querySelector('main[role="main"]');
+
+          if (isMobile) {
+            // Mobile: use overlay and show class
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+          } else {
+            // Desktop: use collapsed class
+            var isCollapsed = sidebar.classList.toggle('collapsed');
+
+            // Adjust main content
+            if (mainContent) {
+              if (isCollapsed) {
+                mainContent.style.marginLeft = 'auto';
+                mainContent.style.marginRight = 'auto';
+                mainContent.style.maxWidth = '1400px';
+              } else {
+                mainContent.style.marginLeft = '';
+                mainContent.style.marginRight = '';
+                mainContent.style.maxWidth = '';
+              }
+            }
+          }
+        }
+
+        if (menuToggle && sidebar && overlay) {
+          menuToggle.addEventListener('click', toggleSidebar);
+
+          overlay.addEventListener('click', closeSidebar);
+
+          // Close sidebar when clicking any link in the sidebar on mobile
+          sidebar.addEventListener('click', function(e) {
+            // Check if clicked element is a link or inside a link
+            var target = e.target;
+            if (target.tagName === 'A' || target.closest('a')) {
+              if (window.innerWidth <= 768) {
+                setTimeout(closeSidebar, 100);
+              }
+            }
+          });
         }
       });
     </script>
