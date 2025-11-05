@@ -434,6 +434,32 @@
       display: none;
     }
 
+    /* Remark block styling - only show on homepage when smokebody is empty */
+    .smokebody-remark-block {
+      padding: 2.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .smokebody-remark-block h5 {
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    .smokebody-remark-block h5 i {
+      color: #3b82f6;
+      margin-right: 0.5rem;
+    }
+
+    .smokebody-remark-block p {
+      line-height: 1.6;
+      color: #495057;
+      margin-bottom: 0;
+    }
+
     /* Breadcrumb styling */
     .breadcrumb {
       background: transparent;
@@ -533,11 +559,14 @@
         <main role="main" class="col-md-10 ms-sm-auto col-lg-10 px-4">
           <div class="smokebody-header">
             <h2><i class="bi bi-activity"></i> <##title##></h2>
-            <h6 class="mt-2"><##remark##></h6>
           </div>
           <div id="smokebody">
             <p><##overview##></p>
             <p><##body##></p>
+          </div>
+          <div id="smokebody-remark" class="smokebody-remark-block">
+            <h5 class="mb-3"><i class="bi bi-info-circle"></i> Welcome</h5>
+            <p><##remark##></p>
           </div>
         </main>
       </div>
@@ -576,6 +605,23 @@
       }
       // Force scroll to top
       window.scrollTo(0, 0);
+
+      // Show remark block only when smokebody is empty (homepage)
+      document.addEventListener('DOMContentLoaded', function() {
+        var smokebody = document.getElementById('smokebody');
+        var remarkBlock = document.getElementById('smokebody-remark');
+
+        if (smokebody && remarkBlock) {
+          // Check if smokebody has no text content (empty or only whitespace)
+          var hasContent = smokebody.textContent.trim().length > 0;
+
+          if (!hasContent) {
+            // Hide empty smokebody and show remark block
+            smokebody.style.display = 'none';
+            remarkBlock.style.display = 'block';
+          }
+        }
+      });
     </script>
 
   </body>
