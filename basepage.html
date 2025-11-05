@@ -559,6 +559,7 @@
         <main role="main" class="col-md-10 ms-sm-auto col-lg-10 px-4">
           <div class="smokebody-header">
             <h2><i class="bi bi-activity"></i> <##title##></h2>
+            <h6 class="mt-2 target-remark"><##remark##></h6>
           </div>
           <div id="smokebody">
             <p><##overview##></p>
@@ -610,15 +611,22 @@
       document.addEventListener('DOMContentLoaded', function() {
         var smokebody = document.getElementById('smokebody');
         var remarkBlock = document.getElementById('smokebody-remark');
+        var targetRemark = document.querySelector('.target-remark');
 
-        if (smokebody && remarkBlock) {
-          // Check if smokebody has no text content (empty or only whitespace)
-          var hasContent = smokebody.textContent.trim().length > 0;
+        if (smokebody && remarkBlock && targetRemark) {
+          // Check if smokebody has actual content (text, images, or other elements)
+          var hasText = smokebody.textContent.trim().length > 0;
+          var hasImages = smokebody.getElementsByTagName('img').length > 0;
+          var hasContent = hasText || hasImages;
 
           if (!hasContent) {
-            // Hide empty smokebody and show remark block
+            // Homepage: Hide empty smokebody and target remark, show welcome remark block
             smokebody.style.display = 'none';
+            targetRemark.style.display = 'none';
             remarkBlock.style.display = 'block';
+          } else {
+            // Target pages: Keep smokebody visible, hide welcome remark block
+            remarkBlock.style.display = 'none';
           }
         }
       });
