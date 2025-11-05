@@ -288,6 +288,32 @@
     #smokebody p { line-height: 1.6; }
     #smokebody:empty { display: none; }
 
+    #smokebody h1 {
+      color: var(--navy-dark);
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      margin-top: 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid rgba(37, 99, 235, 0.2);
+    }
+
+    #smokebody h2 {
+      color: var(--navy-dark);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    #smokebody h3 {
+      color: var(--text-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      margin-top: 1rem;
+    }
+
     #smokebody img {
       padding-bottom: 10px;
       cursor: default;
@@ -505,6 +531,21 @@
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const mainContent = document.querySelector('main[role="main"]');
+
+        // Move h1 from smokebody to header if it exists
+        if (smokebody) {
+          const h1 = smokebody.querySelector('h1');
+          const headerH2 = document.querySelector('.smokebody-header h2');
+
+          if (h1 && headerH2) {
+            const icon = headerH2.querySelector('i');
+            headerH2.textContent = h1.textContent;
+            if (icon) {
+              headerH2.insertBefore(icon, headerH2.firstChild);
+            }
+            h1.remove();
+          }
+        }
 
         // Show/hide remark block based on content
         if (smokebody && remarkBlock && targetRemark) {
